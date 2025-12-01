@@ -9,35 +9,62 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #1a237e, #3f51b5, #5c6bc0); /* Lebih biru cerah */
+            /* Latar belakang yang lebih mengisi ruang */
+            background: linear-gradient(135deg, #0f172a, #1e293b, #334155); 
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 0;
+            margin: 0;
         }
         .game-container {
-            max-width: 90%;
-            width: 1000px;
-            background: rgba(255, 255, 255, 0.98); /* Lebih cerah */
-            border-radius: 20px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-            padding: 30px;
-            margin: 20px 0;
+            width: 100%;
+            height: 100vh;
+            background: #ffffff; /* Putih solid untuk konten utama */
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            padding: 0; /* Hapus padding di container utama */
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 0;
         }
+        .quiz-main-layout {
+            display: flex;
+            flex-grow: 1; /* Memastikan layout mengisi ruang yang tersisa */
+            overflow: hidden; /* Mencegah konten melebihi batas */
+        }
+        
+        /* Area Soal mengambil 60% dan Area Game mengambil 40% pada desktop */
+        .quiz-area-wrapper {
+            width: 65%;
+            padding: 30px;
+            overflow-y: auto;
+            background-color: #f8fafc; /* Sedikit off-white */
+            border-right: 1px solid #e2e8f0;
+        }
+        .game-area-wrapper {
+            width: 35%;
+            padding: 30px;
+            background: linear-gradient(to bottom, #eff6ff, #dbeafe); /* Gradient biru muda */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
         .pole-area {
             position: relative;
-            height: 300px;
-            background: #f0f0f0; /* Latar tiang lebih terang */
+            height: 80%; /* Memanfaatkan tinggi yang tersedia */
+            max-height: 500px;
+            width: 100px; /* Lebar tiang area */
+            background: #e2e8f0; 
             border-radius: 10px;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: flex-end;
             margin-bottom: 20px;
-            border: 2px solid #5c6bc0;
+            border: 2px solid #94a3b8;
         }
         .electric-pole {
             width: 30px;
@@ -52,59 +79,43 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efek pantulan */
+            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
             width: 40px;
             height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 30px;
-            background: #ff7043; /* Oranye cerah */
+            background: #f97316; /* Oranye solid */
             border-radius: 50%;
-            border: 3px solid #bf360c;
-            box-shadow: 0 0 15px rgba(255, 112, 67, 0.9);
+            border: 3px solid #c24100;
+            box-shadow: 0 0 15px rgba(249, 115, 22, 0.9);
             z-index: 10;
         }
-        .climber-inner {
-            animation: bounce 0.5s infinite alternate;
-        }
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-5px); }
-        }
+        
         .quiz-option {
             transition: all 0.2s;
-            background-color: #e8eaf6; /* Biru muda */
-            color: #1a237e;
+            background-color: #e0e7ff; /* Biru muda */
+            color: #1e3a8a;
             font-weight: 600;
         }
         .quiz-option:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-            background-color: #c5cae9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background-color: #c7d2fe;
         }
         .option-correct {
-            background-color: #66bb6a !important; /* Hijau cerah */
+            background-color: #10b981 !important; /* Hijau solid */
             color: white;
             animation: flash-correct 0.5s 1;
         }
         .option-wrong {
-            background-color: #ef5350 !important; /* Merah cerah */
+            background-color: #ef4444 !important; /* Merah solid */
             color: white;
             animation: shake 0.5s 1;
         }
-        @keyframes flash-correct {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); background-color: #43a047; }
-            100% { transform: scale(1); }
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
-        }
 
-        /* Confetti Styles */
+        /* Confetti Styles (tidak diubah) */
         .confetti {
             position: fixed;
             z-index: 1000;
@@ -121,18 +132,27 @@
             0% { opacity: 1; transform: translateY(-100px) rotate(0deg); }
             100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
         }
-        /* Responsiveness */
-        @media (max-width: 640px) {
+
+        /* Responsiveness untuk tampilan mobile/tablet */
+        @media (max-width: 1024px) {
             .game-container {
-                padding: 15px;
+                height: auto;
+                min-height: 100vh;
+            }
+            .quiz-main-layout {
+                flex-direction: column;
+            }
+            .quiz-area-wrapper, .game-area-wrapper {
+                width: 100%;
+                padding: 20px;
+                border-right: none;
+            }
+            .game-area-wrapper {
+                height: 350px; /* Tinggi tetap untuk mobile */
             }
             .pole-area {
-                height: 200px;
-            }
-            .climber {
-                width: 30px;
-                height: 30px;
-                font-size: 20px;
+                height: 250px;
+                width: 80px;
             }
         }
     </style>
@@ -144,16 +164,16 @@
 </div>
 
 <script>
-    // Data Soal (Total 50 Soal: 40 Konsep + 10 Perhitungan/Soal Cerita)
-    const questions = [
+    // Data Soal
+    const originalQuestions = [
         // BAGIAN A: KALOR & PERUBAHAN SUHU (1-10) - Konsep
         { q: "Energi panas yang berpindah dari benda bersuhu tinggi ke suhu rendah disebut...", options: ["Usaha", "Energi Potensial", "Daya", "Kalor"], answer: "Kalor", topic: "Kalor (Konsep)" },
         { q: "Proses perpindahan kalor pada air yang mendidih dalam panci adalah...", options: ["Konduksi", "Radiasi", "Adveksi", "Konveksi"], answer: "Konveksi", topic: "Kalor (Konsep)" },
         { q: "Perubahan wujud dari cair menjadi gas di seluruh bagian zat cair disebut...", options: ["Mengembun", "Mencair", "Menguap", "Mendidih"], answer: "Mendidih", topic: "Kalor (Konsep)" },
         { q: "Zat yang memiliki kemampuan baik untuk menghantarkan panas disebut...", options: ["Isolator", "Semikonduktor", "Konduktor", "Resistor"], answer: "Konduktor", topic: "Kalor (Konsep)" },
-        { q: "Pada saat es batu berubah menjadi air (mencair), suhu benda...", options: ["Menurun drastis", "Terus meningkat", "Tetap ($0^\circ\\text{C}$)", "Tidak tentu"], answer: "Tetap ($0^\circ\\text{C}$)", topic: "Kalor (Konsep)" },
+        { q: "Pada saat es batu berubah menjadi air (mencair), suhu benda...", options: ["Menurun drastis", "Terus meningkat", "Tetap (0°C)", "Tidak tentu"], answer: "Tetap (0°C)", topic: "Kalor (Konsep)" },
         { q: "Berikut yang merupakan contoh perpindahan kalor secara radiasi adalah...", options: ["Pegangan panci menjadi panas", "Air mendidih", "Terjadinya angin laut", "Panas Matahari sampai ke Bumi"], answer: "Panas Matahari sampai ke Bumi", topic: "Kalor (Konsep)" },
-        { q: "Kalor jenis ($c$) menunjukkan banyaknya kalor yang diperlukan untuk menaikkan suhu...", options: ["Seluruh massa benda", "1 kg benda", "1 kg benda sebesar $1^\circ\\text{C}$", "Seluruh massa benda sebesar $1^\circ\\text{C}$"], answer: "1 kg benda sebesar $1^\circ\\text{C}$", topic: "Kalor (Konsep)" },
+        { q: "Kalor jenis (c) menunjukkan banyaknya kalor yang diperlukan untuk menaikkan suhu...", options: ["Seluruh massa benda", "1 kg benda", "1 kg benda sebesar 1°C", "Seluruh massa benda sebesar 1°C"], answer: "1 kg benda sebesar 1°C", topic: "Kalor (Konsep)" },
         { q: "Perpindahan kalor yang terjadi pada saat ujung sendok dicelupkan ke air panas adalah...", options: ["Radiasi", "Konveksi", "Konduksi", "Absorpsi"], answer: "Konduksi", topic: "Kalor (Konsep)" },
         { q: "Ketika terjadi kesetimbangan termal antara dua benda, maka...", options: ["Kalor jenisnya sama", "Massa jenisnya sama", "Energinya sama", "Suhunya sama"], answer: "Suhunya sama", topic: "Kalor (Konsep)" },
         { q: "Dua benda bersentuhan dan mencapai suhu yang sama. Ini menunjukkan bahwa perpindahan ____ telah berhenti.", options: ["Massa", "Energi Potensial", "Usaha", "Kalor"], answer: "Kalor", topic: "Kalor (Konsep)" },
@@ -162,13 +182,13 @@
         { q: "Usaha didefinisikan sebagai hasil perkalian antara gaya dengan...", options: ["Waktu", "Kecepatan", "Perpindahan", "Massa"], answer: "Perpindahan", topic: "Usaha & Energi (Konsep)" },
         { q: "Energi yang dimiliki benda karena kedudukannya/ketinggiannya disebut...", options: ["Energi Kinetik", "Energi Mekanik", "Energi Panas", "Energi Potensial"], answer: "Energi Potensial", topic: "Usaha & Energi (Konsep)" },
         { q: "Seorang guru membawa tas dan berjalan mendatar. Usaha oleh gaya angkat tangan terhadap tas adalah nol karena...", options: ["Tidak ada gaya", "Kecepatannya konstan", "Gaya sejajar perpindahan", "Gaya tegak lurus perpindahan"], answer: "Gaya tegak lurus perpindahan", topic: "Usaha & Energi (Konsep)" },
-        { q: "Satuan dari Usaha ($\text{W}$) dan Energi ($\text{E}$) dalam SI adalah...", options: ["Newton", "Watt", "Pascal", "Joule"], answer: "Joule", topic: "Usaha & Energi (Konsep)" },
-        { q: "Dalam Hukum Kekekalan Energi Mekanik, $\text{E}_k$ benda akan bertambah jika...", options: ["$\text{E}_p$ bertambah", "Kecepatan berkurang", "Ketinggian bertambah", "Ketinggian berkurang"], answer: "Ketinggian berkurang", topic: "Usaha & Energi (Konsep)" },
+        { q: "Satuan dari Usaha (W) dan Energi (E) dalam SI adalah...", options: ["Newton", "Watt", "Pascal", "Joule"], answer: "Joule", topic: "Usaha & Energi (Konsep)" },
+        { q: "Dalam Hukum Kekekalan Energi Mekanik, Ek benda akan bertambah jika...", options: ["Ep bertambah", "Kecepatan berkurang", "Ketinggian bertambah", "Ketinggian berkurang"], answer: "Ketinggian berkurang", topic: "Usaha & Energi (Konsep)" },
         { q: "Energi yang dimiliki benda karena geraknya disebut...", options: ["Energi Potensial", "Energi Mekanik", "Energi Listrik", "Energi Kinetik"], answer: "Energi Kinetik", topic: "Usaha & Energi (Konsep)" },
-        { q: "Berapakah Usaha yang dilakukan jika sebuah benda didorong dengan gaya $5\\text{ N}$ namun tidak berpindah?", options: ["5 J", "2 J", "1 J", "0 J"], answer: "0 J", topic: "Usaha & Energi (Konsep)" },
+        { q: "Berapakah Usaha yang dilakukan jika sebuah benda didorong dengan gaya 5 N namun tidak berpindah?", options: ["5 J", "2 J", "1 J", "0 J"], answer: "0 J", topic: "Usaha & Energi (Konsep)" },
         { q: "Pada gerak bandul, energi kinetik maksimum terjadi saat bandul berada di...", options: ["Titik tertinggi", "Titik paling rendah", "Setengah ketinggian", "Posisi awal"], answer: "Titik paling rendah", topic: "Usaha & Energi (Konsep)" },
         { q: "Jika kecepatan benda menjadi dua kali lipat, maka energi kinetiknya akan menjadi...", options: ["Dua kali lipat", "Setengah kali lipat", "Empat kali lipat", "Tidak berubah"], answer: "Empat kali lipat", topic: "Usaha & Energi (Konsep)" },
-        { q: "Manakah yang memiliki usaha paling besar?", options: ["Gaya 10 N, pindah 5 m", "Gaya 20 N, pindah 2 m", "Gaya 5 N, pindah 10 m", "Gaya 15 N, pindah 4 m"], answer: "Gaya 15 N, pindah 4 m", topic: "Usaha & Energi (Konsep)" }, // W: 50 J, 40 J, 50 J, 60 J
+        { q: "Manakah yang memiliki usaha paling besar?", options: ["Gaya 10 N, pindah 5 m", "Gaya 20 N, pindah 2 m", "Gaya 5 N, pindah 10 m", "Gaya 15 N, pindah 4 m"], answer: "Gaya 15 N, pindah 4 m", topic: "Usaha & Energi (Konsep)" }, 
 
         // BAGIAN C: GAYA & GERAK (21-30) - Konsep
         { q: "Gerak Lurus Beraturan (GLB) dicirikan oleh...", options: ["Percepatan konstan", "Kecepatan berubah", "Percepatan nol", "Percepatan maksimum"], answer: "Percepatan nol", topic: "Gerak & Gaya (Konsep)" },
@@ -176,47 +196,55 @@
         { q: "Berikut ini yang merupakan contoh GLBB dipercepat adalah...", options: ["Mobil direm", "Bola menggelinding datar", "Buah jatuh dari pohon", "Pesawat terbang stabil"], answer: "Buah jatuh dari pohon", topic: "Gerak & Gaya (Konsep)" },
         { q: "Gaya yang arahnya selalu berlawanan dengan arah gerak benda disebut...", options: ["Gaya Normal", "Gaya Berat", "Gaya Gravitasi", "Gaya Gesek"], answer: "Gaya Gesek", topic: "Gerak & Gaya (Konsep)" },
         { q: "Gaya gesek yang bekerja saat benda sudah bergerak disebut gaya gesek...", options: ["Statis", "Normal", "Berat", "Kinetis"], answer: "Kinetis", topic: "Gerak & Gaya (Konsep)" },
-        { q: "Nilai koefisien gesek statis ($\\mu_s$) selalu lebih ____ daripada koefisien gesek kinetis ($\\mu_k$).", options: ["Kecil", "Sama", "Besar", "Berlawanan"], answer: "Besar", topic: "Gerak & Gaya (Konsep)" },
+        { q: "Nilai koefisien gesek statis (μs) selalu lebih ____ daripada koefisien gesek kinetis (μk).", options: ["Kecil", "Sama", "Besar", "Berlawanan"], answer: "Besar", topic: "Gerak & Gaya (Konsep)" },
         { q: "Jika sebuah benda bergerak, dan resultan gaya yang bekerja padanya adalah nol, maka benda bergerak...", options: ["Dipercepat", "Diperlambat", "Konstan (GLB)", "Diam"], answer: "Konstan (GLB)", topic: "Gerak & Gaya (Konsep)" },
         { q: "Gerak mobil yang sedang direm hingga berhenti adalah contoh dari...", options: ["GLB", "GLBB Dipercepat", "GLBB Diperlambat", "Gerak Melingkar"], answer: "GLBB Diperlambat", topic: "Gerak & Gaya (Konsep)" },
         { q: "Dalam GLB, grafik kecepatan (v) terhadap waktu (t) berbentuk...", options: ["Garis lurus miring", "Parabola ke atas", "Parabola ke bawah", "Garis lurus horizontal"], answer: "Garis lurus horizontal", topic: "Gerak & Gaya (Konsep)" },
         { q: "Faktor utama yang mempengaruhi besar kecilnya gaya gesek antara dua permukaan adalah...", options: ["Kecepatan benda", "Massa jenis benda", "Kekasaran permukaan", "Volume benda"], answer: "Kekasaran permukaan", topic: "Gerak & Gaya (Konsep)" },
 
         // BAGIAN D: SOAL PERHITUNGAN/CERITA (31-40) - Gabungan
-        { q: "Sebuah balok kayu massanya $2\\text{ kg}$ diletakkan pada ketinggian $5\\text{ m}$ dari tanah. Jika percepatan gravitasi ($g$) adalah $10\\text{ m/s}^2$, berapa Energi Potensial balok tersebut?", options: ["10 J", "20 J", "50 J", "100 J"], answer: "100 J", topic: "Energi Potensial (Perhitungan)" }, // Ep = 2 * 10 * 5 = 100 J
-        { q: "Untuk menaikkan suhu $2\\text{ kg}$ besi dari $30^\circ\\text{C}$ menjadi $80^\circ\\text{C}$ dibutuhkan kalor. Jika kalor jenis besi adalah $460\\text{ J/kg}^\circ\\text{C}$, berapa kalor yang dibutuhkan?", options: ["23.000 J", "46.000 J", "92.000 J", "100.000 J"], answer: "46.000 J", topic: "Kalor (Perhitungan)" }, // Q = 2 * 460 * (80-30) = 2 * 460 * 50 = 46000 J
-        { q: "Seorang atlet menendang bola $0,5\\text{ kg}$ sehingga bergerak dengan kecepatan $10\\text{ m/s}$. Berapakah Energi Kinetik bola tersebut?", options: ["5 J", "10 J", "25 J", "50 J"], answer: "25 J", topic: "Energi Kinetik (Perhitungan)" }, // Ek = 1/2 * 0.5 * 10^2 = 0.25 * 100 = 25 J
-        { q: "Sebuah benda awalnya diam, kemudian dipercepat $4\\text{ m/s}^2$. Berapa kecepatannya setelah $5\\text{ detik}$?", options: ["5 m/s", "10 m/s", "20 m/s", "40 m/s"], answer: "20 m/s", topic: "GLBB (Perhitungan)" }, // vt = 0 + 4 * 5 = 20 m/s
-        { q: "Ani memindahkan lemari dengan gaya dorong $200\\text{ N}$. Lemari berpindah sejauh $5\\text{ meter}$. Jika ada gaya gesek $50\\text{ N}$, berapa Usaha total yang dilakukan?", options: ["1000 J", "750 J", "250 J", "50 J"], answer: "750 J", topic: "Usaha (Perhitungan)" }, // W = (200 - 50) * 5 = 150 * 5 = 750 J
-        { q: "Mobil bergerak dengan kecepatan $72\\text{ km/jam}$. Berapa jarak yang ditempuh mobil tersebut dalam waktu $10\\text{ menit}$?", options: ["7,2 km", "10 km", "12 km", "72 km"], answer: "12 km", topic: "GLB (Perhitungan)" }, // v = 72 km/jam = 1.2 km/menit. s = 1.2 * 10 = 12 km
-        { q: "Satu kilogram es bersuhu $0^\circ\\text{C}$ dipanaskan. Jika kalor lebur es adalah $336.000\\text{ J/kg}$, berapa kalor yang dibutuhkan untuk melebur seluruh es?", options: ["33.600 J", "336.000 J", "672.000 J", "3.360.000 J"], answer: "336.000 J", topic: "Kalor Lebur (Perhitungan)" }, // Q = m * L = 1 * 336.000 = 336.000 J
-        { q: "Seorang pekerja mengangkat beban $50\\text{ kg}$ setinggi $2\\text{ meter}$ selama $4\\text{ detik}$. Jika $g=10\\text{ m/s}^2$, berapa daya yang dikeluarkan?", options: ["100 W", "250 W", "500 W", "1000 W"], answer: "250 W", topic: "Daya (Perhitungan)" }, // W = 50*10*2 = 1000 J. P = W/t = 1000/4 = 250 W
-        { q: "Sebuah benda bermassa $10\\text{ kg}$ didorong dengan gaya $30\\text{ N}$. Tentukan percepatan yang dialami benda tersebut!", options: ["1 m/s$^2$", "2 m/s$^2$", "3 m/s$^2$", "30 m/s$^2$"], answer: "3 m/s$^2$", topic: "Hukum Newton (Perhitungan)" }, // a = F/m = 30 / 10 = 3 m/s^2
-        { q: "Berapa kalor yang diperlukan untuk memanaskan $0,5\\text{ kg}$ minyak ($c=1900\\text{ J/kg}^\circ\\text{C}$) sebesar $10^\circ\\text{C}$?", options: ["950 J", "1900 J", "9500 J", "19.000 J"], answer: "9500 J", topic: "Kalor (Perhitungan)" }, // Q = 0.5 * 1900 * 10 = 9500 J
+        { q: "Sebuah balok kayu massanya 2 kg diletakkan pada ketinggian 5 m dari tanah. Jika percepatan gravitasi (g) adalah 10 m/s², berapa Energi Potensial balok tersebut?", options: ["10 J", "20 J", "50 J", "100 J"], answer: "100 J", topic: "Energi Potensial (Perhitungan)" }, 
+        { q: "Untuk menaikkan suhu 2 kg besi dari 30°C menjadi 80°C dibutuhkan kalor. Jika kalor jenis besi adalah 460 J/kg°C, berapa kalor yang dibutuhkan?", options: ["23.000 J", "46.000 J", "92.000 J", "100.000 J"], answer: "46.000 J", topic: "Kalor (Perhitungan)" }, 
+        { q: "Seorang atlet menendang bola 0,5 kg sehingga bergerak dengan kecepatan 10 m/s. Berapakah Energi Kinetik bola tersebut?", options: ["5 J", "10 J", "25 J", "50 J"], answer: "25 J", topic: "Energi Kinetik (Perhitungan)" }, 
+        { q: "Sebuah benda awalnya diam, kemudian dipercepat 4 m/s². Berapa kecepatannya setelah 5 detik?", options: ["5 m/s", "10 m/s", "20 m/s", "40 m/s"], answer: "20 m/s", topic: "GLBB (Perhitungan)" }, 
+        { q: "Ani memindahkan lemari dengan gaya dorong 200 N. Lemari berpindah sejauh 5 meter. Jika ada gaya gesek 50 N, berapa Usaha total yang dilakukan?", options: ["1000 J", "750 J", "250 J", "50 J"], answer: "750 J", topic: "Usaha (Perhitungan)" }, 
+        { q: "Mobil bergerak dengan kecepatan 72 km/jam. Berapa jarak yang ditempuh mobil tersebut dalam waktu 10 menit?", options: ["7,2 km", "10 km", "12 km", "72 km"], answer: "12 km", topic: "GLB (Perhitungan)" }, 
+        { q: "Satu kilogram es bersuhu 0°C dipanaskan. Jika kalor lebur es adalah 336.000 J/kg, berapa kalor yang dibutuhkan untuk melebur seluruh es?", options: ["33.600 J", "336.000 J", "672.000 J", "3.360.000 J"], answer: "336.000 J", topic: "Kalor Lebur (Perhitungan)" }, 
+        { q: "Seorang pekerja mengangkat beban 50 kg setinggi 2 meter selama 4 detik. Jika g=10 m/s², berapa daya yang dikeluarkan?", options: ["100 W", "250 W", "500 W", "1000 W"], answer: "250 W", topic: "Daya (Perhitungan)" }, 
+        { q: "Sebuah benda bermassa 10 kg didorong dengan gaya 30 N. Tentukan percepatan yang dialami benda tersebut!", options: ["1 m/s²", "2 m/s²", "3 m/s²", "30 m/s²"], answer: "3 m/s²", topic: "Hukum Newton (Perhitungan)" }, 
+        { q: "Berapa kalor yang diperlukan untuk memanaskan 0,5 kg minyak (c=1900 J/kg°C) sebesar 10°C?", options: ["950 J", "1900 J", "9500 J", "19.000 J"], answer: "9500 J", topic: "Kalor (Perhitungan)" }, 
         
-        // BAGIAN E: GAYA & GERAK (41-50) - Konsep
-        { q: "Sebuah motor bergerak GLB $15\\text{ m/s}$ selama $10\\text{ s}$. Jarak tempuhnya adalah...", options: ["15 m", "50 m", "100 m", "150 m"], answer: "150 m", topic: "GLB (Perhitungan)" }, // s = 15 * 10 = 150 m
-        { q: "Sebuah mobil dari diam mencapai kecepatan $10\\text{ m/s}$ dalam $5\\text{ s}$. Berapa percepatannya?", options: ["1 m/s$^2$", "2 m/s$^2$", "5 m/s$^2$", "10 m/s$^2$"], answer: "2 m/s$^2$", topic: "GLBB (Perhitungan)" }, // a = 10 / 5 = 2 m/s^2
-        { q: "Sebuah batu dilempar vertikal ke atas. Pada saat mencapai titik tertinggi, percepatannya adalah...", options: ["Nol", "Maksimum", "Sama dengan $g$ ke atas", "Sama dengan $g$ ke bawah"], answer: "Sama dengan $g$ ke bawah", topic: "Gerak & Gaya (Konsep)" }, // Percepatan tetap g (gravitasi) ke bawah
-        { q: "Jika sebuah benda memiliki massa $5\\text{ kg}$ dan bergerak dengan percepatan $2\\text{ m/s}^2$, berapa gaya yang bekerja padanya?", options: ["5 N", "10 N", "20 N", "50 N"], answer: "10 N", topic: "Hukum Newton (Perhitungan)" }, // F = m * a = 5 * 2 = 10 N
+        // BAGIAN E: GAYA & GERAK (41-50) - Konsep & Perhitungan
+        { q: "Sebuah motor bergerak GLB 15 m/s selama 10 s. Jarak tempuhnya adalah...", options: ["15 m", "50 m", "100 m", "150 m"], answer: "150 m", topic: "GLB (Perhitungan)" }, 
+        { q: "Sebuah mobil dari diam mencapai kecepatan 10 m/s dalam 5 s. Berapa percepatannya?", options: ["1 m/s²", "2 m/s²", "5 m/s²", "10 m/s²"], answer: "2 m/s²", topic: "GLBB (Perhitungan)" }, 
+        { q: "Sebuah batu dilempar vertikal ke atas. Pada saat mencapai titik tertinggi, percepatannya adalah...", options: ["Nol", "Maksimum", "Sama dengan g ke atas", "Sama dengan g ke bawah"], answer: "Sama dengan g ke bawah", topic: "Gerak & Gaya (Konsep)" }, 
+        { q: "Jika sebuah benda memiliki massa 5 kg dan bergerak dengan percepatan 2 m/s², berapa gaya yang bekerja padanya?", options: ["5 N", "10 N", "20 N", "50 N"], answer: "10 N", topic: "Hukum Newton (Perhitungan)" }, 
         { q: "Pada gerak GLBB diperlambat, grafik kecepatan terhadap waktu akan membentuk...", options: ["Garis lurus naik", "Garis lurus horizontal", "Garis lurus turun", "Kurva parabola"], answer: "Garis lurus turun", topic: "GLBB (Konsep)" },
-        { q: "Perhatikan rumus $v_t = v_0 + a \\cdot t$. Rumus ini digunakan untuk gerak...", options: ["GLB", "GLBB", "Gerak Melingkar", "Hukum Pascal"], answer: "GLBB", topic: "GLBB (Konsep)" },
+        { q: "Perhatikan rumus vt = v0 + a * t. Rumus ini digunakan untuk gerak...", options: ["GLB", "GLBB", "Gerak Melingkar", "Hukum Pascal"], answer: "GLBB", topic: "GLBB (Konsep)" },
         { q: "Apabila gaya gesek lebih besar daripada gaya dorong, maka benda...", options: ["Bergerak dipercepat", "Bergerak konstan", "Bergeser sedikit", "Tetap diam"], answer: "Tetap diam", topic: "Gaya (Konsep)" },
-        { q: "Buah kelapa $1\\text{ kg}$ berada $10\\text{ m}$ di atas tanah ($g=10\\text{ m/s}^2$). Berapa $\\text{E}_p$ nya?", options: ["1 J", "10 J", "100 J", "200 J"], answer: "100 J", topic: "Energi Potensial (Perhitungan)" }, // Ep = 1 * 10 * 10 = 100 J
-        { q: "Seorang anak mendorong balok dengan gaya $50\\text{ N}$ sejauh $4\\text{ m}$. Berapa Usaha yang dilakukan?", options: ["20 J", "100 J", "200 J", "500 J"], answer: "200 J", topic: "Usaha (Perhitungan)" }, // W = 50 * 4 = 200 J
-        { q: "Sebuah mobil $1000\\text{ kg}$ bergerak $20\\text{ m/s}$. Berapakah $\\text{E}_k$ mobil tersebut?", options: ["20.000 J", "100.000 J", "200.000 J", "400.000 J"], answer: "200.000 J", topic: "Energi Kinetik (Perhitungan)" }, // Ek = 1/2 * 1000 * 20^2 = 500 * 400 = 200.000 J
-
+        { q: "Buah kelapa 1 kg berada 10 m di atas tanah (g=10 m/s²). Berapa Ep nya?", options: ["1 J", "10 J", "100 J", "200 J"], answer: "100 J", topic: "Energi Potensial (Perhitungan)" }, 
+        { q: "Seorang anak mendorong balok dengan gaya 50 N sejauh 4 m. Berapa Usaha yang dilakukan?", options: ["20 J", "100 J", "200 J", "500 J"], answer: "200 J", topic: "Usaha (Perhitungan)" }, 
+        { q: "Sebuah mobil 1000 kg bergerak 20 m/s. Berapakah Ek mobil tersebut?", options: ["20.000 J", "100.000 J", "200.000 J", "400.000 J"], answer: "200.000 J", topic: "Energi Kinetik (Perhitungan)" }, 
     ];
 
+    let questions = []; // Array untuk menyimpan soal yang sudah diacak
     let currentQuestionIndex = 0;
     let score = 0;
     let wrongAnswers = [];
-    let climberPosition = 0; // 0 (bottom) to 100 (top)
+    let climberPosition = 0; 
 
-    const totalQuestions = questions.length; // Sekarang 50
-    const maxClimberHeight = 250; // Tinggi maksimal tiang dalam piksel (sesuai tinggi pole-area - ukuran climber)
-    const stepScore = 100 / totalQuestions; // Nilai per soal, sekarang 100/50 = 2 poin per soal
-    const stepSize = maxClimberHeight / totalQuestions; // Per langkah panjat/turun
+    const totalQuestions = originalQuestions.length; // 50
+    const maxClimberHeight = 400; // Tinggi maksimal tiang dalam piksel (disesuaikan untuk layout baru)
+    const stepScore = 100 / totalQuestions; 
+    const stepSize = maxClimberHeight / totalQuestions; 
+
+    // Fungsi pengacak Fisher-Yates (untuk mengacak urutan soal)
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
 
     // --- FUNGSI CONFETTI ---
     const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722'];
@@ -227,20 +255,14 @@
             const confetti = document.createElement('div');
             confetti.classList.add('confetti');
             confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-
-            // Random position and rotation
             const x = Math.random() * window.innerWidth - (window.innerWidth / 2) + 'px';
             const y = Math.random() * window.innerHeight * 0.2 - window.innerHeight * 0.25 + 'px';
             const rotation = Math.random() * 360 + 'deg';
-            
             confetti.style.setProperty('--x', x);
             confetti.style.setProperty('--y', y);
             confetti.style.setProperty('--rotation', rotation);
             confetti.style.left = Math.random() * 100 + 'vw';
-            
             document.body.appendChild(confetti);
-
-            // Remove confetti after animation ends
             setTimeout(() => {
                 confetti.remove();
             }, 3000);
@@ -251,28 +273,31 @@
 
     function renderInputScreen() {
         const app = document.getElementById('app');
+        // Layout ini untuk layar awal, harus tetap fokus di tengah
         app.innerHTML = `
-            <div class="p-8 bg-white rounded-xl shadow-lg w-full max-w-lg text-center border-t-8 border-indigo-500">
-                <h1 class="text-3xl font-extrabold text-indigo-700 mb-4">Game Panjat Tiang Listrik ⚡️</h1>
-                <p class="mb-6 text-gray-600 font-medium">Review Materi IPA Kelas 8: Kalor, Usaha & Energi, Gerak & Gaya. Total ${totalQuestions} Soal.</p>
+            <div class="flex items-center justify-center w-full h-full p-8">
+                <div class="p-8 bg-white rounded-xl shadow-2xl w-full max-w-lg text-center border-t-8 border-indigo-600">
+                    <h1 class="text-3xl font-extrabold text-indigo-700 mb-4">Game Panjat Tiang Listrik ⚡️</h1>
+                    <p class="mb-6 text-gray-600 font-medium">Review Materi IPA Kelas 8: Kalor, Usaha & Energi, Gerak & Gaya. Total ${totalQuestions} Soal (Diacak).</p>
 
-                <!-- REVIEW MATERI -->
-                <div class="text-left mb-6 p-4 bg-yellow-100 border border-yellow-300 rounded-lg">
-                    <h3 class="text-xl font-bold text-yellow-700 mb-2">Review Penting!</h3>
-                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                        <li>Jawaban Benar: Karakter Panjat Tiang & Skor Naik (${stepScore} poin).</li>
-                        <li>Jawaban Salah: Karakter Turun 2 Langkah & Dicatat sebagai kesalahan.</li>
-                        <li>Total Soal: ${totalQuestions}. Raih skor 75+ untuk mendapatkan Konfeti!</li>
-                    </ul>
-                </div>
+                    <!-- REVIEW MATERI -->
+                    <div class="text-left mb-6 p-4 bg-yellow-100 border border-yellow-300 rounded-lg">
+                        <h3 class="text-xl font-bold text-yellow-700 mb-2">Review Penting!</h3>
+                        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                            <li>Jawaban Benar: Karakter Panjat Tiang & Skor Naik (${stepScore.toFixed(2)} poin).</li>
+                            <li>Jawaban Salah: Karakter Turun 2 Langkah & Dicatat sebagai kesalahan.</li>
+                            <li>Total Soal: ${totalQuestions}. Raih skor 75+ untuk mendapatkan Konfeti!</li>
+                        </ul>
+                    </div>
 
-                <div class="space-y-4">
-                    <input type="text" id="studentName" placeholder="Tulis Nama Siswa" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-lg" required>
-                    <input type="text" id="studentClass" placeholder="Tulis Kelas (misalnya: 8A)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-lg" required>
+                    <div class="space-y-4">
+                        <input type="text" id="studentName" placeholder="Tulis Nama Siswa" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-lg" required>
+                        <input type="text" id="studentClass" placeholder="Tulis Kelas (misalnya: 8A)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-lg" required>
+                    </div>
+                    <button onclick="startGame()" class="mt-8 w-full bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition duration-300 text-xl shadow-md transform hover:scale-105">
+                        Mulai Panjat!
+                    </button>
                 </div>
-                <button onclick="startGame()" class="mt-8 w-full bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition duration-300 text-xl shadow-md transform hover:scale-105">
-                    Mulai Panjat!
-                </button>
             </div>
         `;
     }
@@ -282,18 +307,20 @@
         const className = document.getElementById('studentClass').value.trim();
 
         if (name && className) {
-            // Menggunakan sessionStorage agar data hilang setelah browser ditutup, lebih sesuai untuk game.
             sessionStorage.setItem('studentName', name);
             sessionStorage.setItem('studentClass', className);
+            
+            // 1. Acak urutan soal
+            questions = [...originalQuestions];
+            shuffleArray(questions);
+            
             currentQuestionIndex = 0;
             score = 0;
             wrongAnswers = [];
             climberPosition = 0;
             renderQuiz();
         } else {
-            // Menggunakan modal UI sederhana karena alert() tidak diizinkan
             console.error('Nama dan Kelas wajib diisi untuk memulai game!'); 
-            // Tambahkan visual feedback yang lebih baik di sini jika diperlukan
         }
     }
 
@@ -309,49 +336,73 @@
         const questionNumber = currentQuestionIndex + 1;
 
         const app = document.getElementById('app');
-        // Round score to avoid long decimals on display
         const displayScore = Math.round(score); 
 
         app.innerHTML = `
-            <div class="w-full">
-                <div class="flex justify-between items-center mb-6 p-4 bg-indigo-700 text-white rounded-lg shadow-xl">
-                    <div class="text-sm">
-                        <p>Nama: <span class="font-bold">${name}</span></p>
-                        <p>Kelas: <span class="font-bold">${className}</span></p>
-                    </div>
-                    <div class="text-right text-sm">
-                        <p>Soal: <span class="font-extrabold text-xl">${questionNumber} / ${totalQuestions}</span></p>
-                        <p>Skor: <span class="font-extrabold text-xl text-yellow-300">${displayScore}</span></p>
+            <!-- Header Status Bar -->
+            <div class="flex-shrink-0 flex justify-between items-center p-4 bg-gray-800 text-white shadow-lg">
+                <div class="text-sm">
+                    <p>Siswa: <span class="font-bold text-yellow-300">${name} - ${className}</span></p>
+                </div>
+                <div class="text-right flex items-center space-x-4">
+                    <p class="text-lg">Soal: <span class="font-extrabold text-2xl">${questionNumber} / ${totalQuestions}</span></p>
+                    <p class="text-lg">Skor: <span class="font-extrabold text-2xl text-green-400">${displayScore}</span></p>
+                </div>
+            </div>
+
+            <!-- Main Content: Quiz (65%) & Game (35%) -->
+            <div class="quiz-main-layout">
+                <!-- QUIZ AREA (Kiri/Atas) -->
+                <div class="quiz-area-wrapper">
+                    <div id="quiz-area" class="bg-white p-6 rounded-xl shadow-inner border-l-4 border-indigo-400">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4 bg-indigo-100 p-2 rounded-lg inline-block">Soal #${questionNumber} (${qData.topic})</h2>
+                        <p class="text-3xl text-gray-900 mb-8 font-extrabold leading-snug">${qData.q}</p>
+                        <div class="grid grid-cols-1 gap-4">
+                            ${qData.options.map((option, index) => `
+                                <button id="option-${index}"
+                                    class="quiz-option p-4 font-medium rounded-lg text-left shadow-md hover:ring-2 hover:ring-indigo-400 transform transition-all duration-200"
+                                    onclick="checkAnswer(this, '${option.replace(/'/g, "\\'")}', '${qData.answer.replace(/'/g, "\\'")}')">
+                                    <span class="font-bold mr-2">${String.fromCharCode(65 + index)}.</span> ${option}
+                                </button>
+                            `).join('')}
+                        </div>
                     </div>
                 </div>
 
-                <!-- Game Area (Tiang Listrik) -->
-                <div class="pole-area bg-gray-100 border-4 border-indigo-400 relative mb-8">
-                    <div class="electric-pole"></div>
-                    <div id="climber" class="climber" style="bottom: ${climberPosition}px;">
-                        <span class="climber-inner">🧑‍🔧</span>
+                <!-- GAME AREA (Kanan/Bawah) -->
+                <div class="game-area-wrapper">
+                    <div class="text-center w-full mb-4">
+                        <h3 class="text-2xl font-black text-indigo-800">STATUS PANJAT</h3>
+                        <p class="text-sm text-indigo-600">Jalur ${name}</p>
                     </div>
-                    <div class="absolute top-4 left-1/2 transform -translate-x-1/2 text-2xl font-black text-green-700 bg-white p-1 rounded-md shadow-md">FINISH</div>
-                    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-xl font-bold text-gray-800">START</div>
-                </div>
 
-                <!-- Quiz Area -->
-                <div id="quiz-area" class="bg-white p-6 rounded-xl shadow-2xl border-t-8 border-indigo-500">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4">Soal #${questionNumber} (${qData.topic})</h2>
-                    <p class="text-2xl text-gray-900 mb-6 font-extrabold">${qData.q}</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${qData.options.map((option, index) => `
-                            <button id="option-${index}"
-                                class="quiz-option p-4 font-medium rounded-lg text-left shadow-md hover:bg-indigo-300"
-                                onclick="checkAnswer(this, '${option.replace(/'/g, "\\'")}', '${qData.answer.replace(/'/g, "\\'")}')">
-                                ${String.fromCharCode(65 + index)}. ${option}
-                            </button>
-                        `).join('')}
+                    <!-- Tiang Listrik -->
+                    <div class="pole-area">
+                        <div class="electric-pole"></div>
+                        <div id="climber" class="climber" style="bottom: 0px;">
+                            <span class="climber-inner">🧑‍🔧</span>
+                        </div>
+                        <div class="absolute top-4 left-1/2 transform -translate-x-1/2 text-lg font-black text-green-700 bg-white p-1 rounded-md shadow-md border-2 border-green-500">FINISH</div>
+                        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-lg font-bold text-gray-800">START</div>
                     </div>
                 </div>
             </div>
         `;
+        
+        // Atur posisi awal pemanjat
         document.getElementById('climber').style.bottom = `${climberPosition}px`;
+        // Atur tinggi maksimal tiang berdasarkan area
+        const poleArea = document.querySelector('.pole-area');
+        if (poleArea) {
+            // Recalculate max height based on actual element height - climber size
+            const newMaxClimberHeight = poleArea.offsetHeight - 40; 
+            // Update step size based on new height
+            stepSize = newMaxClimberHeight / totalQuestions;
+            
+            // Set initial position based on potential previous score (e.g., if rendering error happened)
+            climberPosition = score * stepSize / stepScore;
+            document.getElementById('climber').style.bottom = `${climberPosition}px`;
+        }
     }
 
     // Fungsi untuk membuat penundaan (delay)
@@ -361,23 +412,30 @@
         // Nonaktifkan semua tombol setelah memilih
         document.querySelectorAll('.quiz-option').forEach(btn => btn.disabled = true);
 
+        // Cari tinggi tiang baru setiap kali menjawab
+        const poleArea = document.querySelector('.pole-area');
+        const currentMaxClimberHeight = poleArea ? poleArea.offsetHeight - 40 : maxClimberHeight;
+        const currentStepSize = currentMaxClimberHeight / totalQuestions;
+
         if (selectedOption === correctAnswer) {
             // Jawaban Benar
             button.classList.add('option-correct');
-            score += stepScore; // Tambah skor sesuai nilai per soal
+            score += stepScore; 
             
             // Gerakkan pemanjat ke atas
-            climberPosition = Math.min(climberPosition + stepSize, maxClimberHeight);
-            document.getElementById('climber').style.bottom = `${climberPosition}px`;
+            climberPosition = Math.min(climberPosition + currentStepSize, currentMaxClimberHeight);
+            
+            // Konfeti kecil saat jawaban benar
+            const confettiColors = ['#fff176', '#a5d6a7', '#64b5f6'];
+            launchSmallConfetti(button.getBoundingClientRect(), confettiColors, 30); 
 
         } else {
             // Jawaban Salah
             button.classList.add('option-wrong');
-            wrongAnswers.push(currentQuestionIndex + 1); // Catat nomor soal yang salah
+            wrongAnswers.push(questions[currentQuestionIndex].q); // Catat soal yang salah (sebelum pindah index)
 
             // Highlight jawaban yang benar
             document.querySelectorAll('.quiz-option').forEach(btn => {
-                // Remove 'A. ' or 'B. ' prefix when comparing to the correct answer string
                 const optionText = btn.innerText.substring(3).trim(); 
                 if (optionText === correctAnswer) {
                     btn.classList.add('bg-green-300', 'text-green-900', 'border-2', 'border-green-700');
@@ -385,56 +443,117 @@
             });
 
             // Gerakkan pemanjat ke bawah (hukuman)
-            climberPosition = Math.max(climberPosition - stepSize * 2, 0); // Turun 2x lipat
-            document.getElementById('climber').style.bottom = `${climberPosition}px`;
+            climberPosition = Math.max(climberPosition - currentStepSize * 2, 0); 
         }
 
-        await delay(1500); // Tunggu 1.5 detik
+        document.getElementById('climber').style.bottom = `${climberPosition}px`;
+
+        await delay(1500); 
         currentQuestionIndex++;
         renderQuiz();
     }
+    
+    // Fungsi konfeti kecil untuk feedback per jawaban
+    function launchSmallConfetti(rect, colors, count) {
+        for (let i = 0; i < count; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Posisi awal di sekitar tombol yang ditekan
+            const startX = rect.left + rect.width / 2;
+            const startY = rect.top + rect.height / 2;
+            
+            confetti.style.left = startX + 'px';
+            confetti.style.top = startY + 'px';
+            
+            // Animasi kecil
+            confetti.style.animationName = 'smallFall';
+            confetti.style.animationDuration = '1.5s';
+            
+            // Random direction
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 80 + 20;
+            const finalX = startX + distance * Math.cos(angle) - (window.innerWidth / 2) + 'px';
+            const finalY = startY + distance * Math.sin(angle) + 'px';
+
+            confetti.style.setProperty('--x', finalX);
+            confetti.style.setProperty('--y', finalY);
+
+            document.body.appendChild(confetti);
+
+            setTimeout(() => {
+                confetti.remove();
+            }, 1500);
+        }
+    }
+    
+    // Tambahkan keyframe untuk animasi konfeti kecil
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = `
+        @keyframes smallFall {
+            0% { opacity: 1; transform: translate(0, 0) rotate(0deg); }
+            100% { opacity: 0; transform: translate(var(--x), var(--y)) rotate(360deg); }
+        }
+    `;
+    document.head.appendChild(styleSheet);
+
 
     function renderResultScreen() {
         const finalScore = Math.round(score);
         const name = sessionStorage.getItem('studentName');
         const className = sessionStorage.getItem('studentClass');
-        const isPassed = finalScore >= 75; // Contoh KKM
+        const isPassed = finalScore >= 75; 
 
         const app = document.getElementById('app');
+        // Layout hasil disesuaikan agar lebih responsif dan padat
         app.innerHTML = `
-            <div class="p-8 bg-white rounded-xl shadow-lg w-full max-w-lg text-center border-t-8 ${isPassed ? 'border-green-600' : 'border-red-600'}">
-                <h1 class="text-3xl font-extrabold mb-4 ${isPassed ? 'text-green-700' : 'text-red-700'}">
-                    ${isPassed ? 'SELAMAT, MISI SELESAI! 🥳' : 'PERLU BELAJAR LAGI 🧐'}
-                </h1>
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">Hasil Panjat Tiang Listrik</h2>
-                
-                <div class="mb-8 p-6 bg-indigo-50 border border-indigo-200 rounded-xl space-y-3">
-                    <p class="text-lg">Nama Siswa: <span class="font-bold text-indigo-700">${name}</span></p>
-                    <p class="text-lg">Kelas: <span class="font-bold text-indigo-700">${className}</span></p>
-                    <hr class="border-indigo-300 my-3">
-                    <p class="text-xl">Total Jawaban Benar: <span class="font-extrabold text-green-600">${totalQuestions - wrongAnswers.length}</span></p>
-                    <p class="text-xl">Total Jawaban Salah: <span class="font-extrabold text-red-600">${wrongAnswers.length}</span></p>
-                    <p class="text-4xl font-black mt-4 ${isPassed ? 'text-green-700' : 'text-red-700'}">SKOR AKHIR: ${finalScore}</p>
-                </div>
+            <div class="flex items-center justify-center w-full h-full p-8 bg-gray-100">
+                <div class="p-10 bg-white rounded-xl shadow-2xl w-full max-w-2xl text-center border-t-8 ${isPassed ? 'border-green-600' : 'border-red-600'}">
+                    <h1 class="text-4xl font-extrabold mb-4 ${isPassed ? 'text-green-700' : 'text-red-700'}">
+                        ${isPassed ? 'SELAMAT, ANDA BERHASIL! 🥳' : 'PERLU PERBAIKAN! 🧐'}
+                    </h1>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Laporan Hasil Panjat Tiang Listrik</h2>
+                    
+                    <div class="mb-8 p-6 bg-indigo-50 border border-indigo-200 rounded-xl space-y-3">
+                        <p class="text-lg">Siswa: <span class="font-bold text-indigo-700">${name}</span></p>
+                        <p class="text-lg">Kelas: <span class="font-bold text-indigo-700">${className}</span></p>
+                        <hr class="border-indigo-300 my-3">
+                        <p class="text-xl">Jawaban Benar: <span class="font-extrabold text-green-600">${totalQuestions - wrongAnswers.length} / ${totalQuestions}</span></p>
+                        <p class="text-xl">Jawaban Salah: <span class="font-extrabold text-red-600">${wrongAnswers.length}</span></p>
+                        <p class="text-5xl font-black mt-6 ${isPassed ? 'text-green-700' : 'text-red-700'}">SKOR AKHIR: ${finalScore}</p>
+                    </div>
 
-                <div class="text-left mb-6 p-4 bg-red-100 border border-red-300 rounded-lg ${wrongAnswers.length === 0 ? 'hidden' : ''}">
-                    <h3 class="text-xl font-bold text-red-700 mb-2">Review Ulang Soal:</h3>
-                    <p class="text-gray-800 break-words font-semibold">${wrongAnswers.join(', ')}</p>
-                </div>
+                    <div class="text-left mb-6 p-4 bg-red-100 border border-red-300 rounded-lg max-h-40 overflow-y-auto ${wrongAnswers.length === 0 ? 'hidden' : ''}">
+                        <h3 class="text-xl font-bold text-red-700 mb-2">Soal yang Perlu Dipelajari Ulang (${wrongAnswers.length}):</h3>
+                        <ol class="list-decimal list-inside text-sm text-gray-800 space-y-1">
+                            ${wrongAnswers.map(q => `<li>${q}</li>`).join('')}
+                        </ol>
+                    </div>
 
-                <button onclick="renderInputScreen()" class="mt-4 w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 transition duration-300">
-                    Ulangi Permainan
-                </button>
+                    <button onclick="renderInputScreen()" class="mt-4 w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 transition duration-300 transform hover:scale-[1.01]">
+                        Ulangi Permainan
+                    </button>
+                </div>
             </div>
         `;
 
         if (isPassed) {
-            launchConfetti();
+            launchConfetti(); // Konfeti besar untuk kemenangan
         }
     }
 
     // Initialize the application
-    renderInputScreen();
+    document.addEventListener('DOMContentLoaded', () => {
+        // Cek apakah mode kuis sedang berjalan (untuk menghindari flicker)
+        if (sessionStorage.getItem('studentName') && sessionStorage.getItem('studentClass') && currentQuestionIndex < questions.length) {
+             // Jika data sesi ada, kita bisa memuat ulang game, tapi karena kita mau shuffle, lebih aman ke start screen.
+             renderInputScreen();
+        } else {
+             renderInputScreen();
+        }
+    });
 </script>
 
 </body>
